@@ -2,7 +2,7 @@
 
 <!-- ?> 小 tao 在这里祝大家新年快乐 🎉🎉 -->
 
-?> [🌟 最近更新《2022 年前端面试小结》文章,点击查看 ](interview/scene/2022?id=_2022-年前端面试小结)
+?> [🌟 最近更新《巩固基础,重新开始学数组》文章,点击查看 ](javascript/basic/array?id=array)
 
 - ⏳ 爱分享，爱生活！在我眼里，`你永远是不一样的烟火`！觉得还不错的话，记得好好学习吖！
 - ✨ 本仓库建立的初衷是为了记录一路走来学习的计算机专业知识，方便之后复习与查看。`起于此，但不止于此`，在不断的摸索和完善，勤能补拙，相信一点点的积累最后汇聚成海！希望我的这个小小的计划，可以帮助到实力强大的你！`止于至善` 🧡🧡
@@ -32,7 +32,13 @@
 
 ![](https://gitee.com/itsandy/picgo-img/raw/master/未分类/JavaScript.png)
 
+`基础篇`
+
+- [**巩固基础,重新开始学数组**](javascript/basic/array)
+
 <!-- - [**Arguments 对象深入了解**](javascript/advanced/arguments?id=arguments) -->
+
+`进阶篇`
 
 - [**JSON 详解**](javascript/basic/json?id=json)
 - [**聊一聊常见的浏览器端数据存储方案**](javascript/basic/storage?id=浏览器存储方案)
