@@ -457,4 +457,66 @@ Array.prototype.t_fill = function (
 console.log(arr.t_fill(4, 2, 3)); // [1,2,4,4,5]
 ```
 
+手写 includes
+
+```js
+const arr = [1, 2, 3, 4, 5];
+
+/**
+ * 解析:
+ * - 我们需要返回一个Boolean值
+ * - start如果没有传,默认值为0
+ * - start如果为负值，则按升序从 array.length + start 的索引开始搜
+ * - 之后从start开始循环,直到有相同的item与value相同则返回return,反之返回false
+ * @param {any} value
+ * @param {Number} start
+ * @returns {Boolean}
+ */
+Array.prototype.t_includes = function (value, start = 0) {
+  start = start < 0 ? start + this.length : start;
+  for (let i = start; i < this.length; i++) {
+    if (this[i] == value) return true;
+  }
+  return false;
+};
+
+console.log(arr.t_includes(2, 2)); // false
+```
+
+手写 join
+
+```js
+
+```
+
+手写 flat
+
+```js
+const arr = [1, 2, 3, 4, 5, [6, [7]]];
+
+/**
+ * 解析:
+ * - 首先我们先拷贝一份数组,之后操作完毕将它返回
+ * - 我们需要对数组遍历depth次,depth表示我们需要拍平多少次
+ * - 这里使用while而不是for循环的原因是因为while会先进行判断然后进行遍历,可以提升一点性能
+ * - 使用some+isArray判断数组的元素如果有一个是数组就return true
+ * - 如果遍历的时候发现item是一个数组就进行合并
+ * @param {Number} depth
+ * @returns {Array}
+ */
+Array.prototype.t_flat = function (depth = 1) {
+  let newArr = this;
+  let i = 0;
+  while (newArr.some((item) => Array.isArray(item))) {
+    if (i >= depth) break;
+    newArr = [].concat(...newArr);
+    i++;
+  }
+  return newArr;
+};
+
+console.log(arr.flat(3)); // [1,2,3,4,5,6,7]
+console.log(arr.t_flat(0)); // [1,2,3,4,5,6,7]
+```
+
 ?>😊 持续更新,且不断整理..

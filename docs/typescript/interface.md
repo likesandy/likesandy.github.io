@@ -1,15 +1,12 @@
 # 接口
+
 ## 一、接口的声明
 
-在前面我们通过 type 可以用来声明一个对象类型：
+在前面我们通过 type(类型别名) 可以用来声明一个对象类型：
 
-对象的另外一种声明方式就是通过接口来声明：
+接口声明是命名对象类型的另一种方式
 
 ```ts
-// type InfoType = {
-//   name: string;
-//   age: number;
-// };
 // 在接口名称前面+I(算是一种规范)
 interface IInfoType {
   name: string;
@@ -22,9 +19,26 @@ const info: InfoType = {
 };
 ```
 
-他们在使用上的区别，我们后续再来说明。
+因为 JavaScript 支持类和面向对象程序设计，所以 TypeScript 也是如此，你可以对类使用一个接口声明:
 
-接下来我们继续学习一下接口的其他特性。
+```ts
+interface User {
+  name: string;
+  id: number;
+}
+
+class UserAccount {
+  name: string;
+  id: number;
+
+  constructor(name: string, id: number) {
+    this.name = name;
+    this.id = id;
+  }
+}
+
+const user: User = new UserAccount("Murphy", 1);
+```
 
 ## 二、可选属性
 
@@ -200,9 +214,11 @@ foo(new Person());
 
 我们会发现 interface 和 type 都可以用来定义对象类型，那么在开发中定义对象类型时，到底选择哪一个呢？
 
-- 如果是定义非对象类型，通常推荐使用 type，比如 Direction、Alignment、一些 Function；
+如果是定义非对象类型，通常推荐使用 type，比如 Direction、Alignment、一些 Function；
 
 如果是定义对象类型，那么他们是有区别的：
+
+最主要的区别:
 
 - interface 可以重复的对某个接口来定义属性和方法；
 - 而 type 定义的是别名，别名是不能重复的；
@@ -231,11 +247,8 @@ type Person {
 ```
 
 当然官网文档中也有提到
-::: warning 提示
-For the most part, you can choose based on personal preference, and TypeScript will tell you if it needs something to be the other kind of declaration. If you would like a heuristic, use interface until you need to use features from type.
 
-在大多数情况下，你可以根据**个人喜好**来选择，TypeScript 会告诉你，如果它需要的东西是其他类型的声明。如果你想要一个启发式的方法，请使用 interface，直到你需要使用来自 type 的特性。
-:::
+在大多数情况下，你可以根据**个人喜好**来选择，TypeScript 会告诉你，它是否需要其他类型的声明。如果你想要一个启发式的方法，请使用 `interface`，直到你需要使用来自 `type` 的特性。
 
 ## 九、字面量赋值
 

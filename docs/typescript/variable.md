@@ -1,4 +1,5 @@
-# TypeScript中的变量
+# TypeScript 中的变量
+
 ## 一、变量的声明
 
 在 TypeScript 中定义变量需要指定 标识符 的类型,声明了类型后 TypeScript 就会进行类型检测，声明的类型可以称之为**类型注解**；
@@ -34,10 +35,12 @@ let name: string = "tao";
 在开发中，有时候为了方便起见我们并不会在声明每一个变量时都写上对应的数据类型，我们更希望可以通过 TypeScript 本身的
 特性帮助我们推断出对应的变量类型：
 
-![4.png](https://img13.360buyimg.com/ddimg/jfs/t1/202984/19/701/13021/61122a1bEf756da9e/cc0ef62fd9c66158.png)
+```ts
+let name: string = "tao";
+```
 
-![5.png](https://img13.360buyimg.com/ddimg/jfs/t1/189254/28/17552/17829/61122a1aE0568bdeb/6c88c45aafa29302.png)
+然而，在大多数情况下，这是不必要的。只要有可能，TypeScript 就会尝试自动推断代码中的类型。例如，变量的类型是基于其初始化器的类型来推断的:
 
 这是因为在一个变量第一次赋值时，会根据后面的赋值内容的类型，来推断出变量的类型：
 
-- 上面的 age 就是因为后面赋值的是一个`number`类型，所以 age 虽然没有明确的说明，但是依然是一个`number`类型；
+上面的 name 就是因为后面赋值的是一个`string`类型，TypeScript 会自动进行类型推导,所以我们其实没有必要再进行类型注解

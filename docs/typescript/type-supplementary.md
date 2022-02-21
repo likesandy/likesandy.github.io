@@ -1,4 +1,3 @@
-
 # 类型补充
 
 ## 一、对象类型
@@ -22,7 +21,11 @@ coordinate({ x: 12, y: 123, z: 213 });
 当我们设立形参的时候,在 ts 中设立了几个就必须传几个,但是我们希望有些属性可以传也可以不传
 
 ```ts
-function coordinate(coordinate: { x: number; y: number; z?: number }) {
+function coordinate(coordinate: {
+  x: number;
+  y: number;
+  z?: number;
+}) {
   console.log(coordinate.x);
   console.log(coordinate.y);
   console.log(coordinate.z);
@@ -30,49 +33,6 @@ function coordinate(coordinate: { x: number; y: number; z?: number }) {
 
 coordinate({ x: 12, y: 123 });
 ```
-
-## 三、联合类型
-
-简单的说就是或者
-
-比如我们设立一个参数的类型为 number 或者是 string 类型,我们就可以使用联合类型
-
-```ts
-function foo(message: string | number) {
-  console.log(message);
-}
-
-foo("abc");
-foo(123);
-```
-
-传入给一个联合类型的值是非常简单的：只要保证是联合类型中的某一个类型的值即可
-
-- 但是我们拿到这个值之后，我们应该如何使用它呢？因为它可能是任何一种类型。
-- 比如我们拿到的值可能是 string 或者 number，我们就不能对其调用 string 上的一些方法；
-
-那么我们怎么处理这样的问题呢？
-
-- 我们需要使用**缩小**（narrow）联合（后续我们还会专门讲解缩小相关的功能）；
-- TypeScript 可以根据我们缩小的代码结构，推断出更加具体的类型；
-
-```ts
-function foo(message: string | number) {
-  if (typeof message === "string") {
-    console.log(message.toString());
-  } else {
-    console.log(message);
-  }
-}
-
-foo("abc");
-foo(123);
-```
-
-联合类型的缺点:
-
-- 需要进行很多的逻辑判断(类型缩小)
-- 返回值的类型是不容易确定的
 
 ## 四、可选类型和联合类型的关系
 
@@ -85,28 +45,6 @@ function foo(name?: string) {
 
 foo();
 foo(undefined);
-```
-
-## 五、类型别名
-
-在前面，我们通过在类型注解中编写 对象类型 和 联合类型，但是当我们想要多次在其他地方使用时，就要编写多
-次。
-
-比如我们可以给对象类型起一个别名：
-
-```ts
-type CoordinateType = {
-  x: number;
-  y: number;
-  z?: number;
-};
-function coordinate(coordinate: CoordinateType) {
-  console.log(coordinate.x);
-  console.log(coordinate.y);
-  console.log(coordinate.z);
-}
-
-coordinate({ x: 12, y: 123 });
 ```
 
 ## 六、类型断言
@@ -130,7 +68,7 @@ TypeScript 只允许类型断言转换为 更具体 或者 不太具体 的类�
 
 ```ts
 const name = "tao";
-const age: number = (name as any) as number;
+const age: number = name as any as number;
 ```
 
 还有一个小案例可以看看:

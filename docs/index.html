@@ -69,6 +69,22 @@
       'flexible-alerts': {
         style: 'flat'
       },
+      search: {
+      maxAge: 86400000, // 
+      // Localization
+      placeholder: {
+        '/': '搜索'
+      },
+
+      noData: {
+        '/': '未找到结果'
+      },
+
+      // Headline depth, 1 - 6
+      depth: 6,
+
+      hideOtherSidebarContent: true, // whether or not to hide other sidebar content
+    },
       // pagination: {
       //   previousText: '上一章节',
       //   nextText: '下一章节',
@@ -95,6 +111,7 @@
 
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
   <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
 
   <!-- 复制代码-->
   <script src="https://cdn.jsdelivr.net/gh/likesandy/blog-cdn/js/docsify-copy-code.js"></script>
