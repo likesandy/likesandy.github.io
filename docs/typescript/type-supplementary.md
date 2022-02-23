@@ -64,7 +64,23 @@ const imgEl = document.querySelector(".tao") as HTMLImageElement;
 imgEl.src = "src地址";
 ```
 
+您还可以使用尖括号语法(除非代码位于.tsx 文件中) ，这是等效的:
+
+```ts
+const imgEl = <HTMLImageElement>document.querySelector(".tao");
+imgEl.src = "src地址";
+```
+
+!>提醒: 因为类型断言是在编译时删除的，所以不存在与类型断言关联的运行时检查。如果类型断言错误，则不会生成异常或 null。
+
 TypeScript 只允许类型断言转换为 更具体 或者 不太具体 的类型版本，此规则可防止不可能的强制转换：
+
+```ts
+const age = 18 as String;
+// 类型 "number" 到类型 "String" 的转换可能是错误的，因为两种类型不能充分重叠。如果这是有意的，请先将表达式转换为 "unknown"
+```
+
+有时这个规则可能过于保守，不允许更复杂的有效强制。如果发生这种情况，你可以使用两个断言，首先是对任何(或者未知，我们将在后面介绍) ，然后是所需的类型:
 
 ```ts
 const name = "tao";
@@ -81,6 +97,7 @@ class Student extends Person {
 }
 
 function sayHello(p: Person) {
+  // 类型“Person”上不存在属性“say”
   p.say();
 }
 
@@ -108,7 +125,6 @@ class Student extends Person {
 }
 
 function sayHello(p: Person) {
-  // p.say()
   (p as Student).say();
 }
 
@@ -118,29 +134,17 @@ sayHello(stu);
 
 ## 七、非空类型断言
 
-当我们编写下面的代码时，在执行 ts 的编译阶段会报错：
-
-- 这是因为传入的 name 有可能是为 undefined 的，这个时候是不能执行方法的；
+TypeScript 还有一种特殊的语法，用于在不进行任何显式检查的情况下从类型中删除 null 和未定义的内容。写作！在任何表达式之后都是一个类型断言，该值不是 null 或未定义的:
 
 ```ts
-function foo(name?: string) {
-  console.log(name.toString());
+function liveDangerously(x?: number | null) {
+  console.log(x.toFixed());
 }
-
-foo("hello world");
 ```
 
-但是，我们确定传入的参数是有值的，这个时候我们可以使用非空类型断言：
+非空断言使用的是 `!` ，表示可以确定某个标识符是有值的，跳过 ts 在编译阶段对它的检测；
 
-- 非空断言使用的是 ! ，表示可以确定某个标识符是有值的，跳过 ts 在编译阶段对它的检测；
-
-```ts
-function foo(name?: string) {
-  console.log(name!.toString());
-}
-
-foo("hello world");
-```
+就像其他类型断言一样，这不会改变代码的运行时行为，因此只使用它是很重要的！当您知道该值不能为空或未定义时。
 
 ## 八、可选链
 
@@ -189,6 +193,10 @@ console.log(info.name);
 console.log(info.friend?.name);
 ```
 
+诶你会发现非空类型断言好像跟可选链是差不多的耶,其实两者是有区别,面试也可能会作为冷门题来考你
+
+!作为编译阶段的非空判断,?.不仅仅会在编译时有效,而且会在运行时也有有效
+
 ## 九、??和!!
 
 ### 9.1 ??
@@ -214,9 +222,9 @@ let flag = !!name;
 console.log(flag); // true
 ```
 
-## 十、字面量
+## 十、文字类型(字面量类型)
 
-除了前面我们所讲过的类型之外，也可以使用字面量类型（literal types）：
+除了一般类型字符串和数字之外，我们还可以在类型位置中引用特定的字符串和数字。
 
 ```ts
 // 其实你会发现你使用let和const定义变量是不同的
@@ -227,33 +235,42 @@ const message = "tao";
 
 ![12.png](https://img14.360buyimg.com/ddimg/jfs/t1/176869/20/18569/20766/61122a1bE3efaa1db/5e4e88e98acc5021.png)
 
-其实使用 const 如果不指定类型的话,默认它会帮你转为字面量类型,当然你也可以为其它类型
+文字类型本身并不是很有价值
 
-在 ts 中你可以指定任何东西为类型
-
-```ts
-// 设置了字面量类型,它的值也只能是类型的值
-let message: 123 = 123;
-// 报错
-message = "abc";
-```
-
-那你肯定会有疑问,这个字面量类型有什么意义喃,感觉没什么用啊
-
-默认情况下这么做是没有太大的意义的，但是我们可以将多个类型联合在一起；
+但是，通过将文字组合成联合，可以表达一个更有用的概念——例如，只接受一组已知值的函数:
 
 ```ts
-type AlignType = "left" | "right" | "center";
-
-function changeAlign(align: AlignType) {
-  console.log(`修改方向为${align}`);
+function foo(params: "a" | "b" | "c") {
+  console.log("foo");
 }
 
-changeAlign("left");
-changeAlign("right");
-changeAlign("center");
-// 报错
-changeAlign(311);
+// 只能传入a或者b或者c
+foo("a");
+foo("d"); // 类型“"d"”的参数不能赋给类型“"a" | "b" | "c"”的参数。
+```
+
+当然，你可以把这些类型和非文字类型结合起来:
+
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+function foo(params: Person | "dog") {
+  console.log("hhh");
+}
+foo({ name: "tao", age: 18 });
+foo("dog");
+foo(123); // 类型“123”的参数不能赋给类型“Person | "dog"”的参数。
+```
+
+还有一种文字类型: 布尔文字。只有两种布尔文字类型，正如您可能猜到的，它们是 true 和 false 类型。类型 boolean 本身实际上只是 true | false 的别名。
+
+```ts
+function foo(params: true | false) {}
+// 等价于
+function foo(params: boolean) {}
 ```
 
 ## 十一、字面量推理
@@ -289,7 +306,7 @@ const options: OptionsType = {
 // 或者我们也可以进行类型断言
 request(options.url, options.method as MethodType);
 
-// 我们也可以使用官方的字面量推理
+// 也可以使用 const 将整个对象转换为文本类型
 const options = {
   url: "http://www.codertao.work/",
   method: "Get",

@@ -218,10 +218,8 @@ foo(new Person());
 
 如果是定义对象类型，那么他们是有区别的：
 
-最主要的区别:
-
-- interface 可以重复的对某个接口来定义属性和方法；
-- 而 type 定义的是别名，别名是不能重复的；
+- interface 可以重复的对某个接口来定义属性和方法,而 type 定义的是别名，别名是不能重复的；
+- 如果需要对原来的类型进行一个扩展,interface 可以使用`extends`进行继承,type 只能通过`&`扩展；
 
 ```ts
 interface Person {
@@ -232,18 +230,28 @@ interface Person {
 interface Person {
   age: number;
 }
+
+// 继承
+interface Man extends Person {
+  height: Number;
+}
 ```
 
 ```ts
-type Person {
-  name: string;
-}
+type Person = {
+  name: String;
+};
 
 // 报错 重复的标识符'Person'。
-type Person {
-  age: number;
-}
+// type Person {
+// age: Number;
+// }
 
+// 扩展
+
+type Man = Person & {
+  age: Number;
+};
 ```
 
 当然官网文档中也有提到
@@ -340,7 +348,8 @@ const info: IPerson = {
 枚举类型是为数不多的 TypeScript 特性有的特性之一：
 
 - 枚举其实就是将一组可能出现的值，一个个列举出来，定义在一个类型中，这个类型就是枚举类型；
-- 枚举允许开发者定义一组命名常量，常量可以是数字、字符串类型；
+- 枚举允许开发者定义一组命名常量，常量可以是数字、字符串类型...；
+- 枚举是一种值类型
 
 ```ts
 enum Direction {
@@ -374,8 +383,6 @@ turnDirection(Direction.TOP); // 向上转动
 turnDirection(Direction.RIGHT); // 向右转动
 turnDirection(Direction.BOTTOM); // 向下转动
 ```
-
-## 十二、枚举类型的值
 
 枚举类型默认是有值的，比如上面的枚举，默认值是这样的：
 
@@ -411,3 +418,120 @@ enum Direction {
   BOTTOM = "BOTTOM",
 }
 ```
+
+枚举的值也可以作为类型
+
+```ts
+enum Person {
+  name = 1,
+  age,
+}
+
+interface Man {
+  name: Person.name;
+  age: number;
+}
+
+function foo(params: Man) {
+  if (params.name === Person.name) {
+    console.log("aaa");
+    return;
+  }
+  console.log("bbb");
+}
+
+foo({ name: 1, age: 18 }); // aaa
+foo({ name: 2, age: 18 }); // bbb
+```
+
+枚举是运行时真正存在的对象
+
+```ts
+enum random {
+  x,
+  y,
+  z,
+}
+
+function foo(params: { x: number }) {
+  console.log(params.x);
+}
+
+foo(random); // 0
+```
+
+可以从 name->value,也可以从 value->name(反向映射)
+
+```ts
+enum Person {
+  man,
+  woman,
+}
+
+const man = Person.man;
+console.log(man); // 0
+const woman = Person[1];
+console.log(woman); // woman
+```
+
+请记住，字符串枚举成员根本不会得到反向映射
+
+```ts
+enum Person {
+  man = "2",
+  woman = "1",
+}
+
+const man = Person.man;
+console.log(man); // '2'
+const woman = Person["2"];
+console.log(woman); // undefined
+```
+
+const 让枚举更加成熟
+
+官方文档明确写出“大多数情况下，枚举是十分有效的方案。 然而在某些情况下需求很严格。 为了避免在额外生成的代码上的开销和额外的非直接的对枚举成员的访问，我们可以使用 const 枚举”
+
+假如仅仅通过通过 const enum 定义了枚举类型而没有其它地方调用，这段代码将在**编译时**被直接抹掉。
+
+```ts
+const enum Person {
+  man,
+  woman,
+}
+
+console.log(Person.man, Person.woman); // 0 1
+
+// 编译后
+("use strict");
+console.log(0 /* man */, 1 /* woman */); // 0 1
+```
+
+Const 枚举只能使用常量枚举表达式
+
+```ts
+let height = 1.83;
+let age = 18;
+
+const enum Person {
+  man = height,
+  woman = age,
+}
+// 常量枚举成员初始值设定项只能包含文字值和其他计算的枚举值
+```
+
+在现代 TypeScript 中，你可能不需要一个枚举，因为一个对象的常量就足够了
+
+```ts
+enum Person {
+  man,
+  woman,
+}
+// 等价于
+const person = {
+  man: 0,
+  woman: 1,
+} as const;
+```
+
+与 TypeScript 的枚举相比，支持这种格式的最大理由是，它使你的代码库与 JavaScript 的状态保持一致，如果枚举被添加到 JavaScript 中，那么你可以转移到额外的语法。
